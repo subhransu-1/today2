@@ -1,0 +1,27 @@
+version: 2.1
+orbs:
+  azure-cli: circleci/azure-cli@1.2.2
+  terraform: circleci/terraform@3.1.0
+jobs:
+  example-job:
+    docker:
+      # replace with your preferred image
+      - image: cimg/base:stable
+    steps:
+      - azure-cli/install:
+      - azure-cli/login-with-user:
+      - terraform/install:
+          terraform_version:'1.2.3'
+workflows:
+  example-workflow:
+    jobs:
+      - terraform/init:
+          cli_config_file: main.tf
+      - terraform/validate:
+          cli_config_file: main.tf
+      - terraform/fmt:
+          cli_config_file: main.tf
+      - terraform/apply:
+          cli_config_file: main.tf
+      - terraform/destroy:
+          cli_config_file: main.tf
