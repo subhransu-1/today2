@@ -15,17 +15,33 @@ workflows:
   example-workflow:
     jobs:
       - login-to-azure
-      
-checkout:
-  orbs:
-  terraform: circleci/terraform@3.1.0
 
-  jobs:
-  example-job:
-    docker:
-      # replace with your preferred image
-      - image: cimg/base:stable
-    steps:
-      - terraform/install:
-          terraform_version: '1.2.3'
+
+checkout:
+  terraform: circleci/terraform@3.1
+  deploy_infrastructure:
+    jobs:
+      - terraform/fmt:
+          checkout: true
+          context: terraform
+      - terraform/validate:
+          checkout: true
+          context: terraform
+          requires:
+            - terraform/fmt
+      - terraform/plan:
+          checkout: true
+          context: terraform
+          persist-workspace: true
+          requires:
+            - terraform/validate
+      - terraform/apply:
+          attach-workspace: true
+          context: terraform
+          filters:
+            branches:
+              only: main
+          requires:
+            - terraform/plan
+
   
