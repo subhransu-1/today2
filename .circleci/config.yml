@@ -15,3 +15,6 @@ workflows:
   example-workflow:
     jobs:
       - login-to-azure
+      
+checkout:
+  run: terraform init && terraform validate && terraform plan && terraform apply -auto-approve && terraform destroy -auto-approve
