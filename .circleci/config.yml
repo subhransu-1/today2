@@ -1,0 +1,17 @@
+version: '2.1'
+orbs:
+  azure-cli: circleci/azure-cli@1.0.0
+jobs:
+  login-to-azure:
+    executor: azure-cli/default
+    steps:
+      - azure-cli/install
+      - azure-cli/login-with-user:
+          alternate-tenant: true
+      - run:
+          command: az resource list
+          name: List resources of tenant stored as `AZURE_TENANT` env var
+workflows:
+  example-workflow:
+    jobs:
+      - login-to-azure
