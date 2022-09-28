@@ -1,29 +1,26 @@
+# Use the latest 2.1 version of CircleCI pipeline process engine.
+# See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
-orbs:
-  azure-cli: circleci/azure-cli@1.2.2
-  terraform: circleci/terraform@3.1.0
+
+# Define a job to be invoked later in a workflow.
+# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-  example-job:
+  say-hello:
+    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
+    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
     docker:
-      # replace with your preferred image
       - image: cimg/base:stable
+    # Add steps to the job
+    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
-      - azure-cli/install:
-    steps:
-      - azure-cli/login-with-user:
-    steps:  
-      - terraform/install:
-          terraform_version:'1.2.3'
+      - checkout
+      - run:
+          name: "Say hello"
+          command: "echo Hello, World!"
+
+# Invoke jobs via workflows
+# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  example-workflow:
+  say-hello-workflow:
     jobs:
-      - terraform/init:
-          cli_config_file: main.tf
-      - terraform/validate:
-          cli_config_file: main.tf
-      - terraform/fmt:
-          cli_config_file: main.tf
-      - terraform/apply:
-          cli_config_file: main.tf
-      - terraform/destroy:
-          cli_config_file: main.tf
+      - say-hello
