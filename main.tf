@@ -15,26 +15,26 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "test" {
-  name     = "subh-rg"
+  name     = "subh-rg1"
   location = "Central India"
 }
 
 resource "azurerm_virtual_network" "test" {
-  name                = "subh-vn"
+  name                = "subh-vn1"
 address_space       = ["10.0.0.0/16"]
   location            = azurerm_resource_group.test.location
   resource_group_name = azurerm_resource_group.test.name
 }
 
 resource "azurerm_subnet" "test" {
-  name                 = "subh-pub"
+  name                 = "subh-pub1"
   resource_group_name  = azurerm_resource_group.test.name
   virtual_network_name = azurerm_virtual_network.test.name
   address_prefixes     = ["10.0.2.0/24"]
 }
 
 resource "azurerm_public_ip" "test" {
-  name                = "subh-ip"
+  name                = "subh-ip1"
   location            = azurerm_resource_group.test.location
   resource_group_name = azurerm_resource_group.test.name
   allocation_method   = "Static"
@@ -42,12 +42,12 @@ resource "azurerm_public_ip" "test" {
 
 resource "azurerm_network_interface" "test" {
   count               = 1
-  name                = "subh${count.index}"
+  name                = "subh1${count.index}"
   location            = azurerm_resource_group.test.location
   resource_group_name = azurerm_resource_group.test.name
 
   ip_configuration {
- name                          = "testConfiguration"
+ name                          = "testConfiguration1"
     subnet_id                     = azurerm_subnet.test.id
     private_ip_address_allocation = "dynamic"
   }
@@ -55,7 +55,7 @@ resource "azurerm_network_interface" "test" {
 
 resource "azurerm_managed_disk" "test" {
   count                = 1
-  name                 = "subh-disk${count.index}"
+  name                 = "subh-disk1${count.index}"
   location             = azurerm_resource_group.test.location
   resource_group_name  = azurerm_resource_group.test.name
   storage_account_type = "Standard_LRS"
@@ -64,7 +64,7 @@ resource "azurerm_managed_disk" "test" {
 }
 
 resource "azurerm_availability_set" "avset" {
-  name                         = "subh-avset"
+  name                         = "subh-avset1"
   location                     = azurerm_resource_group.test.location
   resource_group_name          = azurerm_resource_group.test.name
   platform_fault_domain_count  = 1
@@ -74,7 +74,7 @@ resource "azurerm_availability_set" "avset" {
 
 resource "azurerm_virtual_machine" "test" {
   count                 = 1
-  name                  = "subhvm${count.index}"
+  name                  = "subhvm1${count.index}"
   location              = azurerm_resource_group.test.location
   availability_set_id   = azurerm_availability_set.avset.id
   resource_group_name   = azurerm_resource_group.test.name
@@ -94,7 +94,7 @@ resource "azurerm_virtual_machine" "test" {
     version   = "latest"
   }
  storage_os_disk {
-    name              = "myosdisk${count.index}"
+    name              = "myosdisk1${count.index}"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Standard_LRS"
